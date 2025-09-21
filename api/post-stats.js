@@ -71,11 +71,7 @@ module.exports = async function handler(req, res) {
       publishedTo: result.publishedTo,
       totalRelays: result.totalRelays,
       timestamp: new Date().toISOString(),
-      stats: {
-        memberCount: stats.memberCount,
-        totalChannels: stats.totalChannels,
-        totalCapacity: stats.totalCapacity
-      },
+      stats: stats, // Return the full stats object with debug info
       relays: result.results.map(r => ({
         relay: r.relay,
         success: r.success
