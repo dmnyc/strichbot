@@ -1,4 +1,4 @@
-# StrichBot 🤖⚡
+# StrichBot ♾️🤖⚡
 
 A Nostr bot that periodically posts Nodestrich community statistics from Amboss.space.
 
