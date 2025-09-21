@@ -51,6 +51,7 @@ In your Vercel dashboard:
 |---------------|-------|----------|
 | `NOSTR_NSEC` | Your bot's private key (starts with nsec1) | ✅ Yes |
 | `AMBOSS_API_KEY` | Your Amboss API key | ❌ Optional |
+| `COMMUNITY_ID` | Lightning Network community ID from Amboss | ❌ Optional |
 | `NOSTR_RELAYS` | Comma-separated relay URLs | ❌ Optional |
 
 ### Default Relays
@@ -129,6 +130,7 @@ Monitor the Vercel function logs to ensure the bot is running correctly.
 # Example values
 NOSTR_NSEC=nsec1abcd1234...
 AMBOSS_API_KEY=your-api-key-here
+COMMUNITY_ID=6d41c0bd-6e39-40a2-a062-a809c2e8c2b5
 NOSTR_RELAYS=wss://relay.damus.io,wss://relay.snort.social,wss://nostr.wine
 ```
 

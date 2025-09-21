@@ -3,7 +3,7 @@
  * This function is called by Vercel cron jobs every 6 hours
  */
 
-const { fetchNodestrichStats } = require('../lib/amboss');
+const { fetchCommunityStats } = require('../lib/amboss');
 const { publishEvent, formatStatsMessage, parseRelays } = require('../lib/nostr');
 
 /**
@@ -27,6 +27,7 @@ module.exports = async function handler(req, res) {
     // Get environment variables
     const nsec = process.env.NOSTR_NSEC;
     const ambossApiKey = process.env.AMBOSS_API_KEY;
+    const communityId = process.env.COMMUNITY_ID;
     const relayString = process.env.NOSTR_RELAYS;
 
     // Validate required environment variables
@@ -42,7 +43,7 @@ module.exports = async function handler(req, res) {
 
     // Fetch statistics from Amboss
     console.log('StrichBot: Fetching statistics from Amboss...');
-    const stats = await fetchNodestrichStats(ambossApiKey);
+    const stats = await fetchCommunityStats(ambossApiKey, communityId);
     console.log('StrichBot: Statistics fetched:', stats);
 
     // Format the message

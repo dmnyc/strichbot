@@ -9,5 +9,7 @@
       "path": "/api/post-stats",
       "schedule": "0 5 * * *"
     }
-  ]
+  ],
+  "buildCommand": "echo 'No build required'",
+  "outputDirectory": "."
 }
