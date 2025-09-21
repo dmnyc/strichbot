@@ -6,6 +6,7 @@
 const { fetchCommunityStats } = require('../lib/amboss');
 const { sendMessage, formatStatsMessageForTelegram, validateTelegramConfig } = require('../lib/telegram');
 const { securityMiddleware, setSecurityHeaders } = require('../lib/security');
+const { fetchBlockData } = require('../lib/mempool');
 
 // Optional version info - fallback if file doesn't exist
 let versionInfo;
@@ -108,8 +109,18 @@ export default async function handler(req, res) {
       totalCapacity: stats.totalCapacity
     });
 
+    // Fetch Bitcoin block height
+    console.log('Fetching Bitcoin block height...');
+    const blockData = await fetchBlockData();
+
+    if (blockData) {
+      console.log('Block data fetched:', { height: blockData.height });
+    } else {
+      console.log('Block height unavailable, continuing without it');
+    }
+
     // Format message for Telegram
-    const message = formatStatsMessageForTelegram(stats);
+    const message = formatStatsMessageForTelegram(stats, blockData);
     console.log('Formatted Telegram message:', message);
 
     // Send to Telegram

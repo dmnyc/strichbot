@@ -6,6 +6,7 @@
 const { fetchCommunityStats } = require('../lib/amboss');
 const { publishEvent, formatStatsMessage, parseRelays } = require('../lib/nostr');
 const { securityMiddleware, setSecurityHeaders } = require('../lib/security');
+const { fetchBlockData } = require('../lib/mempool');
 
 // Optional version info - fallback if file doesn't exist
 let versionInfo;
@@ -94,8 +95,18 @@ module.exports = async function handler(req, res) {
 
     console.log('StrichBot: Statistics fetched:', stats);
 
+    // Fetch Bitcoin block height
+    console.log('StrichBot: Fetching Bitcoin block height...');
+    const blockData = await fetchBlockData();
+
+    if (blockData) {
+      console.log('StrichBot: Block data fetched:', { height: blockData.height });
+    } else {
+      console.log('StrichBot: Block height unavailable, continuing without it');
+    }
+
     // Format the message
-    const message = formatStatsMessage(stats);
+    const message = formatStatsMessage(stats, blockData);
     console.log('StrichBot: Message formatted:', message.substring(0, 100) + '...');
 
     // Parse relay URLs
