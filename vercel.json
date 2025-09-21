@@ -1,5 +1,4 @@
 {
-  "version": 2,
   "functions": {
     "api/post-stats.js": {
       "maxDuration": 60
@@ -9,12 +8,6 @@
     {
       "path": "/api/post-stats",
       "schedule": "0 5 * * *"
-    }
-  ],
-  "builds": [
-    {
-      "src": "api/*.js",
-      "use": "@vercel/node"
     }
   ]
 }
