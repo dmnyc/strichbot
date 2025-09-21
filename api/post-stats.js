@@ -44,6 +44,18 @@ module.exports = async function handler(req, res) {
     // Fetch statistics from Amboss
     console.log('StrichBot: Fetching statistics from Amboss...');
     const stats = await fetchCommunityStats(ambossApiKey, communityId);
+
+    // If no stats returned (API failed or no credentials), skip posting
+    if (!stats) {
+      console.log('StrichBot: No statistics available - skipping post');
+      return res.status(200).json({
+        success: true,
+        message: 'No statistics available - post skipped',
+        reason: 'API unavailable or no credentials provided',
+        timestamp: new Date().toISOString()
+      });
+    }
+
     console.log('StrichBot: Statistics fetched:', stats);
 
     // Format the message

@@ -2,12 +2,16 @@
 
 A Nostr bot that periodically posts Nodestrich community statistics from Amboss.space.
 
+**🌐 Website**: [strichbot.vercel.app](https://strichbot.vercel.app)
+**🟣 Nostr**: [npub1hxfkcs9gvtm49702rmwn2aeuvhkd2w6f0svm4sl84g8glhzx5u9srk5p6t](https://jumble.social/users/npub1hxfkcs9gvtm49702rmwn2aeuvhkd2w6f0svm4sl84g8glhzx5u9srk5p6t)
+
 ## Features
 
 - Posts Lightning Network statistics for the Nodestrich community
 - Fetches data from Amboss.space API
 - Publishes to Nostr network daily at 12am Eastern
 - Deployed on Vercel with automated cron jobs
+- Skips posting if live data is unavailable (no fallback data)
 
 ## Statistics Posted
 

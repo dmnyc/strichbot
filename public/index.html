@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StrichBot ♾️🤖⚡ - Lightning Network Community Bot</title>
+    <meta name="description" content="StrichBot is a Nostr bot that posts daily Lightning Network statistics for the Nodestrich community from Amboss.space data.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 4rem;
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            color: #6c757d;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .description {
+            font-size: 1.1rem;
+            color: #495057;
+            text-align: center;
+            margin-bottom: 40px;
+            line-height: 1.8;
+        }
+
+        .stats-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .stats-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .links-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .link-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .link-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .link-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .link-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+
+        .link-description {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .features {
+            margin: 40px 0;
+        }
+
+        .features h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .features ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .features li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e9ecef;
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .features li:before {
+            content: "⚡";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .logo {
+                font-size: 3rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">♾️🤖⚡</div>
+            <h1>StrichBot</h1>
+            <div class="subtitle">Lightning Network Community Bot</div>
+        </div>
+
+        <div class="description">
+            StrichBot is an automated Nostr bot that posts daily statistics for the Nodestrich Lightning Network community.
+            It fetches live data from Amboss.space and shares member counts, channel information, and network capacity updates
+            every day at midnight Eastern time.
+        </div>
+
+        <div class="stats-section">
+            <div class="stats-title">📊 Daily Community Updates</div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" id="memberCount">299</div>
+                    <div class="stat-label">Members</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="channelCount">6,180</div>
+                    <div class="stat-label">Channels</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="capacityCount">611.43</div>
+                    <div class="stat-label">BTC Capacity</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="links-section">
+            <a href="https://jumble.social/users/npub1hxfkcs9gvtm49702rmwn2aeuvhkd2w6f0svm4sl84g8glhzx5u9srk5p6t" class="link-card" target="_blank" rel="noopener">
+                <span class="link-icon">🟣</span>
+                <div class="link-title">Follow on Nostr</div>
+                <div class="link-description">Get daily Lightning Network statistics delivered to your Nostr feed</div>
+            </a>
+
+            <a href="https://github.com/dmnyc/strichbot" class="link-card" target="_blank" rel="noopener">
+                <span class="link-icon">⚫</span>
+                <div class="link-title">View on GitHub</div>
+                <div class="link-description">Open source code for the Lightning Network community bot</div>
+            </a>
+
+            <a href="https://nodestrich.com" class="link-card" target="_blank" rel="noopener">
+                <span class="link-icon">♾️</span>
+                <div class="link-title">Nodestrich Community</div>
+                <div class="link-description">Visit the Lightning Network community StrichBot serves</div>
+            </a>
+        </div>
+
+        <div class="features">
+            <h2>Features</h2>
+            <ul>
+                <li>Posts Lightning Network statistics for the Nodestrich community</li>
+                <li>Fetches live data from Amboss.space API</li>
+                <li>Publishes to Nostr network daily at 12am Eastern</li>
+                <li>Deployed on Vercel with automated cron jobs</li>
+                <li>Only posts when live data is available (no fallback data)</li>
+                <li>Open source and easily forkable for other communities</li>
+                <li>Generic design allows any Lightning Network community to use it</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>Built with ⚡ for the Lightning Network community</p>
+            <p>Data powered by <a href="https://amboss.space" target="_blank" rel="noopener">Amboss.space</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Animate the counters on page load
+        function countUp(elementId, start, end, duration) {
+            let range = end - start;
+            let current = start;
+            let increment = range / (duration / 10);
+            let obj = document.getElementById(elementId);
+            let timer = setInterval(() => {
+                current += increment;
+                if (elementId === 'capacityCount') {
+                    obj.innerText = current.toFixed(2);
+                } else {
+                    obj.innerText = Math.floor(current).toLocaleString();
+                }
+                if (current >= end) {
+                    if (elementId === 'capacityCount') {
+                        obj.innerText = end.toFixed(2);
+                    } else {
+                        obj.innerText = end.toLocaleString();
+                    }
+                    clearInterval(timer);
+                }
+            }, 10);
+        }
+
+        // Fetch live stats and animate
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/stats');
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    const { memberCount, totalChannels, totalCapacity } = result.data;
+
+                    // Start animations with live data
+                    setTimeout(() => {
+                        countUp("memberCount", 0, memberCount, 1500);
+                        countUp("channelCount", 0, totalChannels, 1800);
+                        countUp("capacityCount", 0, totalCapacity, 2000);
+                    }, 500);
+                } else {
+                    // Fallback to default animation
+                    setTimeout(() => {
+                        countUp("memberCount", 0, 299, 1500);
+                        countUp("channelCount", 0, 6180, 1800);
+                        countUp("capacityCount", 0, 611.43, 2000);
+                    }, 500);
+                }
+            } catch (error) {
+                console.log('Could not fetch live stats, using defaults');
+                // Fallback to default animation
+                setTimeout(() => {
+                    countUp("memberCount", 0, 299, 1500);
+                    countUp("channelCount", 0, 6180, 1800);
+                    countUp("capacityCount", 0, 611.43, 2000);
+                }, 500);
+            }
+        }
+
+        // Start loading stats when page loads
+        window.addEventListener('load', loadStats);
+    </script>
+</body>
+</html>

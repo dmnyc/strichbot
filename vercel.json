@@ -11,5 +11,5 @@
     }
   ],
   "buildCommand": "echo 'No build required'",
-  "outputDirectory": "."
+  "outputDirectory": "public"
 }

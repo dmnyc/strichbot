@@ -104,6 +104,8 @@ https://your-project.vercel.app/api/post-stats
 3. Search for your bot's npub
 4. Follow the bot to see its posts
 
+**StrichBot Nostr Profile**: [npub1hxfkcs9gvtm49702rmwn2aeuvhkd2w6f0svm4sl84g8glhzx5u9srk5p6t](https://jumble.social/users/npub1hxfkcs9gvtm49702rmwn2aeuvhkd2w6f0svm4sl84g8glhzx5u9srk5p6t)
+
 ### Check Function Logs
 
 Monitor the Vercel function logs to ensure the bot is running correctly.
@@ -120,9 +122,10 @@ Monitor the Vercel function logs to ensure the bot is running correctly.
    - Some relays may be temporarily down
    - The bot will try all configured relays and succeed if at least one works
 
-3. **"Amboss API error"**
+3. **"Amboss API error"** or **"No statistics available - post skipped"**
    - Check if you need an API key for your usage level
-   - The bot includes fallback data if the API fails
+   - Ensure `COMMUNITY_ID` is set correctly
+   - The bot will skip posting if live data is unavailable (no fallback data)
 
 ### Environment Variables Format
 
