@@ -12,6 +12,7 @@
   "dependencies": {
     "@nostr-dev-kit/ndk": "^2.8.2",
     "nostr-tools": "^2.7.0",
+    "node-telegram-bot-api": "^0.66.0",
     "ws": "^8.17.1"
   },
   "devDependencies": {
