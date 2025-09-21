@@ -11,7 +11,7 @@ const { publishEvent, formatStatsMessage, parseRelays } = require('../lib/nostr'
  * @param {Object} req - Request object
  * @param {Object} res - Response object
  */
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // Set CORS headers for development/testing
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -95,4 +95,4 @@ export default async function handler(req, res) {
 }
 
 // Export for testing
-export { handler };
+module.exports.handler = module.exports;
