@@ -9,7 +9,7 @@ A Nostr bot that periodically posts Nodestrich community statistics from Amboss.
 
 - Posts Lightning Network statistics for the Nodestrich community
 - Fetches data from Amboss.space API
-- Publishes to Nostr network daily at 12am Eastern
+- Publishes to Nostr network daily at 12pm Eastern
 - Deployed on Vercel with automated cron jobs
 - Skips posting if live data is unavailable (no fallback data)
 
@@ -44,7 +44,7 @@ Run locally: `npm run dev`
 
 ## Deployment
 
-The bot automatically runs daily at 12am Eastern via Vercel cron jobs when deployed.
+The bot automatically runs daily at 12pm Eastern via Vercel cron jobs when deployed.
 
 ## License
 

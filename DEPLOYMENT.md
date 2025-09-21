@@ -67,14 +67,14 @@ If you don't set `NOSTR_RELAYS`, these default relays will be used:
 
 ## Step 4: Enable Cron Jobs
 
-The `vercel.json` file already configures a cron job to run daily at 12am Eastern:
+The `vercel.json` file already configures a cron job to run daily at 12pm Eastern:
 
 ```json
 {
   "crons": [
     {
       "path": "/api/post-stats",
-      "schedule": "0 5 * * *"
+      "schedule": "0 17 * * *"
     }
   ]
 }

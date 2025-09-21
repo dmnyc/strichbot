@@ -7,7 +7,7 @@
   "crons": [
     {
       "path": "/api/post-stats",
-      "schedule": "0 5 * * *"
+      "schedule": "0 17 * * *"
     }
   ],
   "buildCommand": "echo 'No build required'",
