@@ -168,6 +168,10 @@
             padding-left: 30px;
         }
 
+        .features li:last-child {
+            border-bottom: none;
+        }
+
         .features li:before {
             content: "⚡";
             position: absolute;
@@ -284,6 +288,7 @@
         <div class="footer">
             <p>Built with ⚡ for the Lightning Network community</p>
             <p>Data powered by <a href="https://amboss.space" target="_blank" rel="noopener">Amboss.space</a></p>
+            <p id="version-info">Loading version...</p>
         </div>
     </div>
 
@@ -346,8 +351,27 @@
             }
         }
 
-        // Start loading stats when page loads
-        window.addEventListener('load', loadStats);
+        // Load version information
+        async function loadVersion() {
+            try {
+                const response = await fetch('/api/version');
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    const versionElement = document.getElementById('version-info');
+                    versionElement.textContent = `v${result.data.fullVersion}`;
+                }
+            } catch (error) {
+                console.log('Could not fetch version info');
+                document.getElementById('version-info').textContent = 'v1.0.0';
+            }
+        }
+
+        // Start loading stats and version when page loads
+        window.addEventListener('load', () => {
+            loadStats();
+            loadVersion();
+        });
     </script>
 </body>
 </html>

@@ -5,10 +5,11 @@
 
 const { fetchCommunityStats } = require('../lib/amboss');
 const { sendMessage, formatStatsMessageForTelegram, validateTelegramConfig } = require('../lib/telegram');
+const versionInfo = require('../lib/version');
 
 export default async function handler(req, res) {
   try {
-    console.log('Starting Telegram stats posting...');
+    console.log(`StrichBot v${versionInfo.fullVersion}: Starting Telegram stats posting...`);
 
     // Get environment variables
     const ambossApiKey = process.env.AMBOSS_API_KEY;
@@ -82,7 +83,8 @@ export default async function handler(req, res) {
           messageId: telegramResult.messageId,
           chatId: telegramResult.chatId,
           sent: true
-        }
+        },
+        version: versionInfo.fullVersion
       },
       timestamp: new Date().toISOString()
     });
