@@ -30,3 +30,6 @@ coverage/
 
 # Development logs
 DEVELOPMENT_LOG.md
+
+# Auto-generated version file
+lib/version.js

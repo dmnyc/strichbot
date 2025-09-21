@@ -168,6 +168,10 @@
             padding-left: 30px;
         }
 
+        .features li:last-child {
+            border-bottom: none;
+        }
+
         .features li:before {
             content: "⚡";
             position: absolute;
@@ -222,8 +226,8 @@
         </div>
 
         <div class="description">
-            StrichBot is an automated Nostr bot that posts daily statistics for the Nodestrich Lightning Network community.
-            It fetches live data from Amboss.space and shares member counts, channel information, and daily network capacity updates.
+            StrichBot is an automated bot that posts daily statistics for the Nodestrich Lightning Network community to both Nostr and Telegram.
+            It fetches live data from Amboss.space and shares member counts, channel information, and daily network capacity updates across both platforms.
         </div>
 
         <div class="stats-section">
@@ -262,6 +266,12 @@
                 <div class="link-title">Nodestrich Community</div>
                 <div class="link-description">Visit the Lightning Network community StrichBot serves</div>
             </a>
+
+            <a href="https://nodestrich.com/tg" class="link-card" target="_blank" rel="noopener">
+                <span class="link-icon">📱</span>
+                <div class="link-title">Join Telegram Group</div>
+                <div class="link-description">Get daily Lightning Network statistics in our Telegram community</div>
+            </a>
         </div>
 
         <div class="features">
@@ -269,7 +279,7 @@
             <ul>
                 <li>Posts Lightning Network statistics for the Nodestrich community</li>
                 <li>Fetches live data from Amboss.space API</li>
-                <li>Publishes to Nostr network daily</li>
+                <li>Publishes to both Nostr network and Telegram daily</li>
                 <li>Deployed on Vercel with automated cron jobs</li>
                 <li>Open source and easily forkable for other communities</li>
             </ul>
@@ -278,6 +288,7 @@
         <div class="footer">
             <p>Built with ⚡ for the Lightning Network community</p>
             <p>Data powered by <a href="https://amboss.space" target="_blank" rel="noopener">Amboss.space</a></p>
+            <p id="version-info">Loading version...</p>
         </div>
     </div>
 
@@ -340,8 +351,27 @@
             }
         }
 
-        // Start loading stats when page loads
-        window.addEventListener('load', loadStats);
+        // Load version information
+        async function loadVersion() {
+            try {
+                const response = await fetch('/api/version');
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    const versionElement = document.getElementById('version-info');
+                    versionElement.textContent = `v${result.data.fullVersion}`;
+                }
+            } catch (error) {
+                console.log('Could not fetch version info');
+                document.getElementById('version-info').textContent = 'v1.0.0';
+            }
+        }
+
+        // Start loading stats and version when page loads
+        window.addEventListener('load', () => {
+            loadStats();
+            loadVersion();
+        });
     </script>
 </body>
 </html>

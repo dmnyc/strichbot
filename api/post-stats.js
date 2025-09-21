@@ -5,6 +5,7 @@
 
 const { fetchCommunityStats } = require('../lib/amboss');
 const { publishEvent, formatStatsMessage, parseRelays } = require('../lib/nostr');
+const versionInfo = require('../lib/version');
 
 /**
  * Main handler for the Vercel serverless function
@@ -21,7 +22,7 @@ module.exports = async function handler(req, res) {
     return res.status(200).end();
   }
 
-  console.log('StrichBot: Starting statistics posting job');
+  console.log(`StrichBot v${versionInfo.fullVersion}: Starting statistics posting job`);
 
   try {
     // Get environment variables
@@ -84,7 +85,8 @@ module.exports = async function handler(req, res) {
       publishedTo: result.publishedTo,
       totalRelays: result.totalRelays,
       timestamp: new Date().toISOString(),
-      stats: stats, // Return the full stats object with debug info
+      version: versionInfo.fullVersion,
+      stats: stats,
       relays: result.results.map(r => ({
         relay: r.relay,
         success: r.success

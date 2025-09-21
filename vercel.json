@@ -2,11 +2,18 @@
   "functions": {
     "api/post-stats.js": {
       "maxDuration": 60
+    },
+    "api/telegram-post.js": {
+      "maxDuration": 60
     }
   },
   "crons": [
     {
       "path": "/api/post-stats",
+      "schedule": "0 17 * * *"
+    },
+    {
+      "path": "/api/telegram-post",
       "schedule": "0 17 * * *"
     }
   ],

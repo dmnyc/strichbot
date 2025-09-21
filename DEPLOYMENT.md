@@ -17,6 +17,43 @@ You can generate a new Nostr key pair using any Nostr client or online tool:
 
 ⚠️ **Important**: Keep your nsec private and secure!
 
+## Step 1.5: Create Telegram Bot (Optional)
+
+If you want Telegram functionality:
+
+1. **Create the bot:**
+   - Message [@BotFather](https://t.me/botfather) on Telegram
+   - Use `/newbot` command and follow the prompts
+   - Save the **bot token** - this is what you'll use for `TELEGRAM_BOT_TOKEN`
+
+2. **Add bot to your group/channel:**
+   - Add your bot to the target group or channel
+   - Make sure the bot has permission to send messages
+
+3. **Find the Chat ID:**
+
+   **Method 1 - Using @userinfobot (Easiest):**
+   - Add [@userinfobot](https://t.me/userinfobot) to your group
+   - The bot will automatically show the chat ID
+   - Remove @userinfobot after getting the ID
+
+   **Method 2 - Using your bot:**
+   - Send a message in the group mentioning your bot
+   - Visit: `https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUpdates`
+   - Look for the `"chat":{"id":` field in the JSON response
+   - The chat ID will be a negative number like `-1001234567890`
+
+   **Method 3 - Using @getidsbot:**
+   - Add [@getidsbot](https://t.me/getidsbot) to your group
+   - Send `/start@getidsbot` in the group
+   - The bot will reply with the chat ID
+
+4. Save the **chat ID** - this is what you'll use for `TELEGRAM_CHAT_ID`
+
+⚠️ **Important**: Keep your bot token private and secure!
+
+⚠️ **Note**: Group chat IDs are negative numbers, channel IDs start with `-100`
+
 ## Step 2: Deploy to Vercel
 
 ### Option A: Deploy from Git Repository
@@ -53,6 +90,8 @@ In your Vercel dashboard:
 | `AMBOSS_API_KEY` | Your Amboss API key | ✅ Yes |
 | `COMMUNITY_ID` | Lightning Network community ID from Amboss | ✅ Yes |
 | `NOSTR_RELAYS` | Comma-separated relay URLs | ❌ Optional |
+| `TELEGRAM_BOT_TOKEN` | Telegram bot token from BotFather | ✅ Yes (for Telegram) |
+| `TELEGRAM_CHAT_ID` | Telegram chat/group ID where to post | ✅ Yes (for Telegram) |
 
 ### Default Relays
 
@@ -67,7 +106,7 @@ If you don't set `NOSTR_RELAYS`, these default relays will be used:
 
 ## Step 4: Enable Cron Jobs
 
-The `vercel.json` file already configures a cron job to run daily at 12pm Eastern:
+The `vercel.json` file already configures cron jobs to run daily at 12pm Eastern:
 
 ```json
 {
@@ -75,20 +114,25 @@ The `vercel.json` file already configures a cron job to run daily at 12pm Easter
     {
       "path": "/api/post-stats",
       "schedule": "0 17 * * *"
+    },
+    {
+      "path": "/api/telegram-post",
+      "schedule": "0 17 * * *"
     }
   ]
 }
 ```
 
-This will automatically run when deployed to Vercel.
+This will automatically post to both Nostr and Telegram when deployed to Vercel.
 
 ## Step 5: Test the Deployment
 
 ### Manual Test
 
-Visit your deployed function URL:
+Visit your deployed function URLs:
 ```
 https://your-project.vercel.app/api/post-stats
+https://your-project.vercel.app/api/telegram-post
 ```
 
 ### Check Logs
@@ -138,6 +182,8 @@ NOSTR_NSEC=nsec1abcd1234...
 AMBOSS_API_KEY=your-api-key-here
 COMMUNITY_ID=6d41c0bd-6e39-40a2-a062-a809c2e8c2b5
 NOSTR_RELAYS=wss://relay.damus.io,wss://relay.snort.social,wss://nostr.wine,wss://nos.lol,wss://nostr.land,wss://nostr.bitcoiner.social,wss://relay.primal.net
+TELEGRAM_BOT_TOKEN=1234567890:ABCDEFghijklmnopqrstuvwxyz123456789
+TELEGRAM_CHAT_ID=-1001234567890
 ```
 
 ## Customization
