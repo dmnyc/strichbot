@@ -4,7 +4,7 @@
 
 1. **Vercel Account**: Sign up at [vercel.com](https://vercel.com)
 2. **Nostr Private Key**: Generate a new nsec key for your bot
-3. **Amboss API Key** (optional): Get from [amboss.space](https://amboss.space) account settings
+3. **Amboss API Key**: Get from [amboss.space](https://amboss.space) account settings (required for live data)
 
 ## Step 1: Generate Nostr Keys
 
@@ -50,8 +50,8 @@ In your Vercel dashboard:
 | Variable Name | Value | Required |
 |---------------|-------|----------|
 | `NOSTR_NSEC` | Your bot's private key (starts with nsec1) | ✅ Yes |
-| `AMBOSS_API_KEY` | Your Amboss API key | ❌ Optional |
-| `COMMUNITY_ID` | Lightning Network community ID from Amboss | ❌ Optional |
+| `AMBOSS_API_KEY` | Your Amboss API key | ✅ Yes |
+| `COMMUNITY_ID` | Lightning Network community ID from Amboss | ✅ Yes |
 | `NOSTR_RELAYS` | Comma-separated relay URLs | ❌ Optional |
 
 ### Default Relays
@@ -126,7 +126,7 @@ Monitor the Vercel function logs to ensure the bot is running correctly.
    - The bot will try all configured relays and succeed if at least one works
 
 3. **"Amboss API error"** or **"No statistics available - post skipped"**
-   - Check if you need an API key for your usage level
+   - Ensure `AMBOSS_API_KEY` is set (required for API access)
    - Ensure `COMMUNITY_ID` is set correctly
    - The bot will skip posting if live data is unavailable (no fallback data)
 
