@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "api/post-stats.js": {
+      "maxDuration": 60
+    }
+  },
+  "crons": [
+    {
+      "path": "/api/post-stats",
+      "schedule": "0 5 * * *"
+    }
+  ]
+}

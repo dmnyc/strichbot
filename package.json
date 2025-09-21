@@ -1,0 +1,23 @@
+{
+  "name": "strichbot",
+  "version": "1.0.0",
+  "description": "A Nostr bot that posts Nodestrich community statistics from Amboss.space",
+  "main": "api/post-stats.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build step required'",
+    "start": "vercel dev",
+    "test": "node test/test-bot.js"
+  },
+  "dependencies": {
+    "@nostr-dev-kit/ndk": "^2.8.2",
+    "nostr-tools": "^2.7.0",
+    "ws": "^8.17.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0"
+  },
+  "keywords": ["nostr", "lightning", "bitcoin", "amboss", "nodestrich"],
+  "author": "StrichBot",
+  "license": "MIT"
+}
