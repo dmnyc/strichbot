@@ -5,7 +5,14 @@
 
 const { fetchCommunityStats } = require('../lib/amboss');
 const { publishEvent, formatStatsMessage, parseRelays } = require('../lib/nostr');
-const versionInfo = require('../lib/version');
+
+// Optional version info - fallback if file doesn't exist
+let versionInfo;
+try {
+  versionInfo = require('../lib/version');
+} catch (error) {
+  versionInfo = { fullVersion: '1.0.0' };
+}
 
 /**
  * Main handler for the Vercel serverless function

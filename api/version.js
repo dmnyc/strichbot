@@ -3,7 +3,19 @@
  * Returns current version information including build details
  */
 
-const versionInfo = require('../lib/version');
+// Optional version info - fallback if file doesn't exist
+let versionInfo;
+try {
+  versionInfo = require('../lib/version');
+} catch (error) {
+  versionInfo = {
+    version: '1.0.0',
+    fullVersion: '1.0.0',
+    buildNumber: 'unknown',
+    commitHash: 'unknown',
+    buildTime: new Date().toISOString()
+  };
+}
 
 export default function handler(req, res) {
   try {
