@@ -61,6 +61,9 @@ If you don't set `NOSTR_RELAYS`, these default relays will be used:
 - `wss://relay.snort.social`
 - `wss://nostr.wine`
 - `wss://nos.lol`
+- `wss://nostr.land`
+- `wss://nostr.bitcoiner.social`
+- `wss://relay.primal.net`
 
 ## Step 4: Enable Cron Jobs
 
@@ -134,7 +137,7 @@ Monitor the Vercel function logs to ensure the bot is running correctly.
 NOSTR_NSEC=nsec1abcd1234...
 AMBOSS_API_KEY=your-api-key-here
 COMMUNITY_ID=6d41c0bd-6e39-40a2-a062-a809c2e8c2b5
-NOSTR_RELAYS=wss://relay.damus.io,wss://relay.snort.social,wss://nostr.wine
+NOSTR_RELAYS=wss://relay.damus.io,wss://relay.snort.social,wss://nostr.wine,wss://nos.lol,wss://nostr.land,wss://nostr.bitcoiner.social,wss://relay.primal.net
 ```
 
 ## Customization
