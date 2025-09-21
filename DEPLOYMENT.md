@@ -92,6 +92,8 @@ In your Vercel dashboard:
 | `NOSTR_RELAYS` | Comma-separated relay URLs | ❌ Optional |
 | `TELEGRAM_BOT_TOKEN` | Telegram bot token from BotFather | ✅ Yes (for Telegram) |
 | `TELEGRAM_CHAT_ID` | Telegram chat/group ID where to post | ✅ Yes (for Telegram) |
+| `CRON_SECRET` | Secret for authenticating cron jobs | ✅ Recommended |
+| `API_KEY` | Key for authorized manual testing | ❌ Optional |
 
 ### Default Relays
 
@@ -103,6 +105,33 @@ If you don't set `NOSTR_RELAYS`, these default relays will be used:
 - `wss://nostr.land`
 - `wss://nostr.bitcoiner.social`
 - `wss://relay.primal.net`
+
+### Security Configuration
+
+For enhanced security, set up these optional variables:
+
+#### CRON_SECRET (Recommended)
+Generate a secure random string for cron job authentication:
+```bash
+# Generate 32-character hex string
+openssl rand -hex 32
+```
+Add this as `CRON_SECRET` in Vercel environment variables.
+
+#### API_KEY (Optional)
+For authorized manual testing, generate an API key:
+```bash
+# Generate 40-character base64 string
+openssl rand -base64 40
+```
+Add this as `API_KEY` in Vercel environment variables.
+
+**Security Benefits:**
+- **Rate Limiting**: Unauthenticated requests limited to 3/hour per IP
+- **Authentication**: Cron jobs and API key bypass rate limits
+- **User-Agent Filtering**: Blocks suspicious bots and crawlers
+- **Method Validation**: Only allows appropriate HTTP methods
+- **Security Headers**: Comprehensive security headers on all responses
 
 ## Step 4: Enable Cron Jobs
 

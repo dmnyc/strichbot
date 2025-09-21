@@ -5,6 +5,7 @@
 
 const { fetchCommunityStats } = require('../lib/amboss');
 const { sendMessage, formatStatsMessageForTelegram, validateTelegramConfig } = require('../lib/telegram');
+const { securityMiddleware, setSecurityHeaders } = require('../lib/security');
 
 // Optional version info - fallback if file doesn't exist
 let versionInfo;
@@ -16,7 +17,43 @@ try {
 
 export default async function handler(req, res) {
   try {
-    console.log(`StrichBot v${versionInfo.fullVersion}: Starting Telegram stats posting...`);
+    // Apply security headers
+    setSecurityHeaders(res);
+
+    // Handle OPTIONS request
+    if (req.method === 'OPTIONS') {
+      res.setHeader('Access-Control-Allow-Origin', 'https://strichbot.vercel.app');
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Cron-Secret, X-API-Key');
+      return res.status(200).end();
+    }
+
+    // Apply security middleware
+    const securityCheck = securityMiddleware(req, res, {
+      maxRequests: 3,           // 3 requests per hour for unauthenticated users
+      windowMs: 60 * 60 * 1000, // 1 hour window
+      allowedMethods: ['GET', 'POST'],
+      requireAuth: true         // Require cron secret or API key
+    });
+
+    if (!securityCheck.allowed) {
+      // Add any additional headers from security check
+      if (securityCheck.headers) {
+        Object.entries(securityCheck.headers).forEach(([key, value]) => {
+          res.setHeader(key, value);
+        });
+      }
+
+      return res.status(securityCheck.status).json({
+        success: false,
+        error: securityCheck.error,
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    // Log security status
+    const authStatus = securityCheck.authenticated ? 'authenticated' : 'rate-limited';
+    console.log(`StrichBot v${versionInfo.fullVersion}: Starting Telegram stats posting (${authStatus}, IP: ${securityCheck.clientIp})`);
 
     // Get environment variables
     const ambossApiKey = process.env.AMBOSS_API_KEY;
