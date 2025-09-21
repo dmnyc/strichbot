@@ -27,3 +27,6 @@ coverage/
 # IDE
 .vscode/
 .idea/
+
+# Development logs
+DEVELOPMENT_LOG.md
