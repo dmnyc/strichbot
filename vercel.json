@@ -39,10 +39,6 @@
     {
       "path": "/api/telegram-post",
       "schedule": "0 17 * * *"
-    },
-    {
-      "path": "/api/check-api-key",
-      "schedule": "0 9 * * *"
     }
   ],
   "buildCommand": "echo 'No build required'",
