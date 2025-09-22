@@ -5,6 +5,30 @@
     },
     "api/telegram-post.js": {
       "maxDuration": 60
+    },
+    "api/check-api-key.js": {
+      "maxDuration": 30
+    },
+    "api/weekly-report.js": {
+      "maxDuration": 60
+    },
+    "api/monthly-report.js": {
+      "maxDuration": 60
+    },
+    "api/annual-report.js": {
+      "maxDuration": 60
+    },
+    "api/admin/config.js": {
+      "maxDuration": 30
+    },
+    "api/admin/schedule.js": {
+      "maxDuration": 30
+    },
+    "api/admin/stats.js": {
+      "maxDuration": 45
+    },
+    "api/admin/test-notification.js": {
+      "maxDuration": 60
     }
   },
   "crons": [
@@ -15,6 +39,10 @@
     {
       "path": "/api/telegram-post",
       "schedule": "0 17 * * *"
+    },
+    {
+      "path": "/api/check-api-key",
+      "schedule": "0 9 * * *"
     }
   ],
   "buildCommand": "echo 'No build required'",

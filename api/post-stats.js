@@ -7,6 +7,7 @@ const { fetchCommunityStats } = require('../lib/amboss');
 const { publishEvent, formatStatsMessage, parseRelays } = require('../lib/nostr');
 const { securityMiddleware, setSecurityHeaders } = require('../lib/security');
 const { fetchBlockData } = require('../lib/mempool');
+const { storeStats, cleanupOldData } = require('../lib/dataStore');
 
 // Optional version info - fallback if file doesn't exist
 let versionInfo;
@@ -103,6 +104,27 @@ module.exports = async function handler(req, res) {
       console.log('StrichBot: Block data fetched:', { height: blockData.height });
     } else {
       console.log('StrichBot: Block height unavailable, continuing without it');
+    }
+
+    // Store statistics for historical analysis
+    try {
+      console.log('StrichBot: Storing statistics for historical analysis...');
+      const statsToStore = {
+        ...stats,
+        blockHeight: blockData?.height || null
+      };
+      await storeStats(statsToStore);
+      console.log('StrichBot: Statistics stored successfully');
+
+      // Clean up old data (run occasionally)
+      if (Math.random() < 0.1) { // 10% chance to run cleanup
+        console.log('StrichBot: Running data cleanup...');
+        const deletedCount = await cleanupOldData();
+        console.log(`StrichBot: Cleanup completed, ${deletedCount} files deleted`);
+      }
+    } catch (storeError) {
+      console.error('StrichBot: Error storing statistics:', storeError);
+      // Continue with posting even if storage fails
     }
 
     // Format the message
