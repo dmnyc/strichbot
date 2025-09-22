@@ -7,6 +7,7 @@ const { fetchCommunityStats } = require('../lib/amboss');
 const { sendMessage, formatStatsMessageForTelegram, validateTelegramConfig } = require('../lib/telegram');
 const { securityMiddleware, setSecurityHeaders } = require('../lib/security');
 const { fetchBlockData } = require('../lib/mempool');
+const { storeStats, cleanupOldData } = require('../lib/dataStore');
 
 // Optional version info - fallback if file doesn't exist
 let versionInfo;
@@ -117,6 +118,27 @@ export default async function handler(req, res) {
       console.log('Block data fetched:', { height: blockData.height });
     } else {
       console.log('Block height unavailable, continuing without it');
+    }
+
+    // Store statistics for historical analysis
+    try {
+      console.log('Storing statistics for historical analysis...');
+      const statsToStore = {
+        ...stats,
+        blockHeight: blockData?.height || null
+      };
+      await storeStats(statsToStore);
+      console.log('Statistics stored successfully');
+
+      // Clean up old data (run occasionally)
+      if (Math.random() < 0.1) { // 10% chance to run cleanup
+        console.log('Running data cleanup...');
+        const deletedCount = await cleanupOldData();
+        console.log(`Cleanup completed, ${deletedCount} files deleted`);
+      }
+    } catch (storeError) {
+      console.error('Error storing statistics:', storeError);
+      // Continue with posting even if storage fails
     }
 
     // Format message for Telegram
