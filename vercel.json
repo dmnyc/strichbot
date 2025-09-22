@@ -34,11 +34,11 @@
   "crons": [
     {
       "path": "/api/post-stats",
-      "schedule": "0 17 * * *"
+      "schedule": "0 16 * * *"
     },
     {
       "path": "/api/telegram-post",
-      "schedule": "0 17 * * *"
+      "schedule": "5 16 * * *"
     }
   ],
   "buildCommand": "echo 'No build required'",
