@@ -33,3 +33,6 @@ DEVELOPMENT_LOG.md
 
 # Auto-generated version file
 lib/version.js
+
+# Screenshots and temporary files
+screenshots/
