@@ -29,16 +29,19 @@
     },
     "api/admin/test-notification.js": {
       "maxDuration": 60
+    },
+    "api/scheduler.js": {
+      "maxDuration": 60
     }
   },
   "crons": [
     {
-      "path": "/api/post-stats",
-      "schedule": "0 16 * * *"
+      "path": "/api/scheduler",
+      "schedule": "0 * * * *"
     },
     {
-      "path": "/api/telegram-post",
-      "schedule": "5 16 * * *"
+      "path": "/api/check-api-key",
+      "schedule": "0 9 * * *"
     }
   ],
   "buildCommand": "echo 'No build required'",

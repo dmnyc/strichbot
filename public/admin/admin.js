@@ -352,8 +352,16 @@ class AdminDashboard {
 
     async saveApiConfig() {
         try {
+            const localDateTime = document.getElementById('api-expiry-date').value;
+            let expiryDate = null;
+
+            if (localDateTime) {
+                const localDate = new Date(localDateTime);
+                expiryDate = new Date(localDate.getTime() + localDate.getTimezoneOffset() * 60000).toISOString();
+            }
+
             const config = {
-                expiryDate: document.getElementById('api-expiry-date').value,
+                expiryDate: expiryDate,
                 warningDays: document.getElementById('warning-days').value
             };
 
