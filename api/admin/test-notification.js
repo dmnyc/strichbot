@@ -153,6 +153,7 @@ If you received this message, Telegram integration is working correctly! ✅`;
  */
 async function handleNostrTest(req, res) {
   try {
+    const { publishEvent, parseRelays } = await import('../../lib/nostr.js');
     const { useTestProfile } = req.body;
     const nsec = useTestProfile && process.env.NOSTR_TEST_NSEC
       ? process.env.NOSTR_TEST_NSEC
