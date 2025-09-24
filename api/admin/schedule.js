@@ -3,23 +3,17 @@
  * Handles dynamic cron schedule updates
  */
 
-const {
+import {
   loadScheduleConfig,
   saveScheduleConfig,
   generateCronSchedules,
   checkScheduleConflicts,
   generateVercelCronConfig,
   updateVercelConfig
-} = require('../../lib/scheduler');
-const { securityMiddleware, setSecurityHeaders } = require('../../lib/security');
+} from '../../lib/scheduler.js';
+import { securityMiddleware, setSecurityHeaders } from '../../lib/security.js';
 
-// Optional version info - fallback if file doesn't exist
-let versionInfo;
-try {
-  versionInfo = require('../../lib/version');
-} catch (error) {
-  versionInfo = { fullVersion: '1.0.0' };
-}
+const versionInfo = { fullVersion: '1.0.0' };
 
 export default async function handler(req, res) {
   try {
@@ -35,7 +29,7 @@ export default async function handler(req, res) {
     }
 
     // Validate admin token
-    const adminToken = req.headers['x-api-key'] || process.env.ADMIN_TOKEN;
+    const adminToken = req.headers['x-api-key'];
     if (!adminToken || adminToken !== process.env.ADMIN_TOKEN) {
       return res.status(401).json({
         success: false,

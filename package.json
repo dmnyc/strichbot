@@ -4,9 +4,7 @@
   "description": "A Nostr bot that posts Nodestrich community statistics from Amboss.space",
   "main": "api/post-stats.js",
   "scripts": {
-    "dev": "vercel dev",
     "build": "echo 'No build step required'",
-    "start": "vercel dev",
     "test": "node test/test-bot.js",
     "version": "node scripts/version.js"
   },

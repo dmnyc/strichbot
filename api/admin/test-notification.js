@@ -3,22 +3,17 @@
  * Handles test notifications and system health checks
  */
 
-const { sendMessage, validateTelegramConfig } = require('../../lib/telegram');
-const { publishEvent, parseRelays } = require('../../lib/nostr');
-const { fetchCommunityStats } = require('../../lib/amboss');
-const { fetchBlockData } = require('../../lib/mempool');
-const { generateWeeklyReport, formatTrendReportForNostr, formatTrendReportForTelegram } = require('../../lib/trendAnalysis');
-const { securityMiddleware, setSecurityHeaders } = require('../../lib/security');
+import { setSecurityHeaders } from '../../lib/security.js';
 
-// Optional version info - fallback if file doesn't exist
-let versionInfo;
-try {
-  versionInfo = require('../../lib/version');
-} catch (error) {
-  versionInfo = { fullVersion: '1.0.0' };
-}
+const versionInfo = { fullVersion: '1.0.0' };
 
 export default async function handler(req, res) {
+  const { sendMessage, validateTelegramConfig } = await import('../../lib/telegram.js');
+  const { publishEvent, parseRelays } = await import('../../lib/nostr.js');
+  const { fetchCommunityStats } = await import('../../lib/amboss.js');
+  const { fetchBlockData } = await import('../../lib/mempool.js');
+  const { generateWeeklyReport, formatTrendReportForNostr, formatTrendReportForTelegram } = await import('../../lib/trendAnalysis.js');
+
   try {
     // Apply security headers
     setSecurityHeaders(res);

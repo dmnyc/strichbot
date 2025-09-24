@@ -36,3 +36,4 @@ lib/version.js
 
 # Screenshots and temporary files
 screenshots/
+.env*.local
