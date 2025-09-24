@@ -5,6 +5,7 @@
 
 import { loadScheduleConfig, saveScheduleConfig } from '../../lib/scheduler.js';
 import { securityMiddleware, setSecurityHeaders } from '../../lib/security.js';
+import { getApiKeyConfig, saveApiKeyConfig } from '../../lib/apiKeyConfig.js';
 
 const versionInfo = { fullVersion: '1.0.0' };
 
@@ -36,7 +37,11 @@ export default async function handler(req, res) {
     if (req.method === 'GET') {
       // Get current configuration
       try {
+        console.log('[CONFIG] Loading schedule config...');
         const config = await loadScheduleConfig();
+        console.log('[CONFIG] Schedule config loaded successfully');
+
+        const apiKeyConfig = await getApiKeyConfig();
 
         // Also include current environment status
         const envStatus = {
@@ -45,12 +50,13 @@ export default async function handler(req, res) {
           hasNostrKey: !!process.env.NOSTR_NSEC,
           hasTelegramBot: !!process.env.TELEGRAM_BOT_TOKEN,
           hasTelegramChat: !!process.env.TELEGRAM_CHAT_ID,
-          apiKeyExpiry: process.env.AMBOSS_API_KEY_EXPIRY_DATE || null,
-          warningDays: process.env.API_KEY_WARNING_DAYS || '7,3,1',
+          apiKeyExpiry: apiKeyConfig.expiryDate,
+          warningDays: apiKeyConfig.warningDays,
           retentionDays: process.env.DATA_RETENTION_DAYS || '400'
         };
 
-        return res.status(200).json({
+        console.log('[CONFIG] Preparing response...');
+        const response = {
           success: true,
           data: {
             ...config,
@@ -58,7 +64,9 @@ export default async function handler(req, res) {
           },
           version: versionInfo.fullVersion,
           timestamp: new Date().toISOString()
-        });
+        };
+        console.log('[CONFIG] Sending response...');
+        return res.status(200).json(response);
 
       } catch (error) {
         console.error('Error loading configuration:', error);
@@ -88,12 +96,15 @@ export default async function handler(req, res) {
           }
         }
 
-        // Note: API key configuration would typically update environment variables
-        // In a serverless environment, this might require deployment or external configuration
+        // Update API key configuration if provided
         if (apiKey) {
-          console.log('API key configuration received (environment variables need manual update)');
-          // This would typically trigger an environment variable update
-          updateCount++;
+          const success = await saveApiKeyConfig(apiKey.expiryDate, apiKey.warningDays);
+          if (success) {
+            updateCount++;
+            console.log('API key configuration updated in database');
+          } else {
+            throw new Error('Failed to save API key configuration');
+          }
         }
 
         return res.status(200).json({

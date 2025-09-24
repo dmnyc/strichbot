@@ -3,19 +3,14 @@
  * This function is triggered by a daily cron job
  */
 
-const { checkKeyExpiration, sendExpirationWarning, shouldSendNotification, loadNotificationState } = require('../lib/keyMonitor');
-const { validateTelegramConfig } = require('../lib/telegram');
-const { securityMiddleware, setSecurityHeaders } = require('../lib/security');
+import { setSecurityHeaders, securityMiddleware } from '../lib/security.js';
+import { getApiKeyConfig } from '../lib/apiKeyConfig.js';
 
-// Optional version info - fallback if file doesn't exist
-let versionInfo;
-try {
-  versionInfo = require('../lib/version');
-} catch (error) {
-  versionInfo = { fullVersion: '1.0.0' };
-}
+const versionInfo = { fullVersion: '1.0.0' };
 
 export default async function handler(req, res) {
+  const { checkKeyExpiration, sendExpirationWarning, shouldSendNotification, loadNotificationState } = await import('../lib/keyMonitor.js');
+  const { validateTelegramConfig } = await import('../lib/telegram.js');
   try {
     // Apply security headers
     setSecurityHeaders(res);
@@ -55,9 +50,11 @@ export default async function handler(req, res) {
     const authStatus = securityCheck.authenticated ? 'authenticated' : 'rate-limited';
     console.log(`StrichBot v${versionInfo.fullVersion}: Starting API key expiration check (${authStatus}, IP: ${securityCheck.clientIp})`);
 
-    // Get environment variables
-    const expiryDate = process.env.AMBOSS_API_KEY_EXPIRY_DATE;
-    const warningDaysStr = process.env.API_KEY_WARNING_DAYS || '7,3,1';
+    // Get API key config from database (with env var fallback)
+    const apiKeyConfig = await getApiKeyConfig();
+    const expiryDate = apiKeyConfig.expiryDate;
+    const warningDaysStr = apiKeyConfig.warningDays;
+
     const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN;
     const telegramChatId = process.env.TELEGRAM_CHAT_ID;
 

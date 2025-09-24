@@ -3,23 +3,17 @@
  * Returns current version information including build details
  */
 
-const { securityMiddleware, setSecurityHeaders } = require('../lib/security');
+import { securityMiddleware, setSecurityHeaders } from '../lib/security.js';
 
-// Optional version info - fallback if file doesn't exist
-let versionInfo;
-try {
-  versionInfo = require('../lib/version');
-} catch (error) {
-  versionInfo = {
-    version: '1.0.0',
-    fullVersion: '1.0.0',
-    buildNumber: 'unknown',
-    commitHash: 'unknown',
-    buildTime: new Date().toISOString()
-  };
-}
+const versionInfo = {
+  version: '1.0.0',
+  fullVersion: '1.0.0',
+  buildNumber: 'unknown',
+  commitHash: 'unknown',
+  buildTime: new Date().toISOString()
+};
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   try {
     // Apply security headers
     setSecurityHeaders(res);
