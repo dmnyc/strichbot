@@ -166,6 +166,20 @@ class AdminDashboard {
 
         const schedules = config.schedules;
 
+        // Populate API key configuration
+        if (config.environment) {
+            if (config.environment.apiKeyExpiry) {
+                const expiryDate = new Date(config.environment.apiKeyExpiry);
+                const localDateTime = new Date(expiryDate.getTime() - expiryDate.getTimezoneOffset() * 60000)
+                    .toISOString()
+                    .slice(0, 16);
+                document.getElementById('api-expiry-date').value = localDateTime;
+            }
+            if (config.environment.warningDays) {
+                document.getElementById('warning-days').value = config.environment.warningDays;
+            }
+        }
+
         // Daily configuration
         if (schedules.daily) {
             document.getElementById('daily-enabled').checked = schedules.daily.enabled;
@@ -180,9 +194,7 @@ class AdminDashboard {
             // Platform settings
             if (schedules.daily.platforms) {
                 document.getElementById('daily-nostr').checked = schedules.daily.platforms.nostr?.enabled || false;
-                document.getElementById('daily-nostr-time').value = schedules.daily.platforms.nostr?.time || '17:00';
                 document.getElementById('daily-telegram').checked = schedules.daily.platforms.telegram?.enabled || false;
-                document.getElementById('daily-telegram-time').value = schedules.daily.platforms.telegram?.time || '17:05';
             }
         }
 
@@ -194,9 +206,7 @@ class AdminDashboard {
 
             if (schedules.weekly.platforms) {
                 document.getElementById('weekly-nostr').checked = schedules.weekly.platforms.nostr?.enabled || false;
-                document.getElementById('weekly-nostr-time').value = schedules.weekly.platforms.nostr?.time || '18:00';
                 document.getElementById('weekly-telegram').checked = schedules.weekly.platforms.telegram?.enabled || false;
-                document.getElementById('weekly-telegram-time').value = schedules.weekly.platforms.telegram?.time || '18:05';
             }
         }
 
@@ -208,9 +218,7 @@ class AdminDashboard {
 
             if (schedules.monthly.platforms) {
                 document.getElementById('monthly-nostr').checked = schedules.monthly.platforms.nostr?.enabled || false;
-                document.getElementById('monthly-nostr-time').value = schedules.monthly.platforms.nostr?.time || '19:00';
                 document.getElementById('monthly-telegram').checked = schedules.monthly.platforms.telegram?.enabled || false;
-                document.getElementById('monthly-telegram-time').value = schedules.monthly.platforms.telegram?.time || '19:05';
             }
         }
 
@@ -221,9 +229,7 @@ class AdminDashboard {
 
             if (schedules.annual.platforms) {
                 document.getElementById('annual-nostr').checked = schedules.annual.platforms.nostr?.enabled || false;
-                document.getElementById('annual-nostr-time').value = schedules.annual.platforms.nostr?.time || '20:00';
                 document.getElementById('annual-telegram').checked = schedules.annual.platforms.telegram?.enabled || false;
-                document.getElementById('annual-telegram-time').value = schedules.annual.platforms.telegram?.time || '20:05';
             }
         }
     }
@@ -273,12 +279,10 @@ class AdminDashboard {
                     days: selectedDays,
                     platforms: {
                         nostr: {
-                            enabled: document.getElementById('daily-nostr').checked,
-                            time: document.getElementById('daily-nostr-time').value
+                            enabled: document.getElementById('daily-nostr').checked
                         },
                         telegram: {
-                            enabled: document.getElementById('daily-telegram').checked,
-                            time: document.getElementById('daily-telegram-time').value
+                            enabled: document.getElementById('daily-telegram').checked
                         }
                     }
                 },
@@ -288,12 +292,10 @@ class AdminDashboard {
                     time: document.getElementById('weekly-time').value,
                     platforms: {
                         nostr: {
-                            enabled: document.getElementById('weekly-nostr').checked,
-                            time: document.getElementById('weekly-nostr-time').value
+                            enabled: document.getElementById('weekly-nostr').checked
                         },
                         telegram: {
-                            enabled: document.getElementById('weekly-telegram').checked,
-                            time: document.getElementById('weekly-telegram-time').value
+                            enabled: document.getElementById('weekly-telegram').checked
                         }
                     }
                 },
@@ -303,12 +305,10 @@ class AdminDashboard {
                     time: document.getElementById('monthly-time').value,
                     platforms: {
                         nostr: {
-                            enabled: document.getElementById('monthly-nostr').checked,
-                            time: document.getElementById('monthly-nostr-time').value
+                            enabled: document.getElementById('monthly-nostr').checked
                         },
                         telegram: {
-                            enabled: document.getElementById('monthly-telegram').checked,
-                            time: document.getElementById('monthly-telegram-time').value
+                            enabled: document.getElementById('monthly-telegram').checked
                         }
                     }
                 },
@@ -318,12 +318,10 @@ class AdminDashboard {
                     time: document.getElementById('annual-time').value,
                     platforms: {
                         nostr: {
-                            enabled: document.getElementById('annual-nostr').checked,
-                            time: document.getElementById('annual-nostr-time').value
+                            enabled: document.getElementById('annual-nostr').checked
                         },
                         telegram: {
-                            enabled: document.getElementById('annual-telegram').checked,
-                            time: document.getElementById('annual-telegram-time').value
+                            enabled: document.getElementById('annual-telegram').checked
                         }
                     }
                 }
