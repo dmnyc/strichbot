@@ -103,43 +103,32 @@ export default async function handler(req, res) {
           console.warn('Schedule conflicts detected:', conflicts);
         }
 
-        // Save the configuration
         const saved = await saveScheduleConfig(config);
+
         if (!saved) {
-          throw new Error('Failed to save schedule configuration');
+          return res.status(500).json({
+            success: false,
+            error: 'Failed to save schedule configuration to database',
+            timestamp: new Date().toISOString()
+          });
         }
 
-        let vercelUpdated = false;
-        let vercelError = null;
+        console.log('Schedule configuration saved to database successfully');
 
-        // Update Vercel configuration if requested
-        if (updateVercel) {
-          try {
-            const vercelCrons = generateVercelCronConfig(cronSchedules);
-            vercelUpdated = await updateVercelConfig(vercelCrons);
-
-            if (vercelUpdated) {
-              console.log('Vercel configuration updated successfully');
-            } else {
-              vercelError = 'Failed to update vercel.json';
-            }
-          } catch (error) {
-            console.error('Error updating Vercel config:', error);
-            vercelError = error.message;
-          }
-        }
+        const vercelCrons = generateVercelCronConfig(cronSchedules);
 
         return res.status(200).json({
           success: true,
-          message: 'Schedule configuration updated successfully',
+          message: 'Schedule configuration saved successfully',
           data: {
             saved: true,
             conflicts: conflicts.length,
             conflictDetails: conflicts,
             vercel: {
-              updated: vercelUpdated,
-              error: vercelError,
-              requiresDeployment: vercelUpdated
+              updated: false,
+              note: 'Update vercel.json manually and redeploy',
+              requiresDeployment: true,
+              suggestedConfig: vercelCrons
             },
             generated: {
               cronSchedules,
