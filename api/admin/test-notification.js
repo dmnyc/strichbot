@@ -153,13 +153,18 @@ If you received this message, Telegram integration is working correctly! ✅`;
  */
 async function handleNostrTest(req, res) {
   try {
-    const nsec = process.env.NOSTR_NSEC;
+    const { useTestProfile } = req.body;
+    const nsec = useTestProfile && process.env.NOSTR_TEST_NSEC
+      ? process.env.NOSTR_TEST_NSEC
+      : process.env.NOSTR_NSEC;
     const relayString = process.env.NOSTR_RELAYS;
 
     if (!nsec) {
       return res.status(400).json({
         success: false,
-        error: 'NOSTR_NSEC environment variable not configured',
+        error: useTestProfile
+          ? 'NOSTR_TEST_NSEC environment variable not configured'
+          : 'NOSTR_NSEC environment variable not configured',
         timestamp: new Date().toISOString()
       });
     }
@@ -167,18 +172,20 @@ async function handleNostrTest(req, res) {
     if (!nsec.startsWith('nsec1')) {
       return res.status(400).json({
         success: false,
-        error: 'NOSTR_NSEC must be in nsec1 format',
+        error: 'Nostr private key must be in nsec1 format',
         timestamp: new Date().toISOString()
       });
     }
 
     // Prepare test message
+    const profileType = useTestProfile ? 'TEST PROFILE' : 'Production Profile';
     const testMessage = `🧪 StrichBot Admin Test ⚡
 
 This is a test note from the StrichBot admin interface.
 
 ⚡ Bot Status: Online
 🤖 Version: ${versionInfo.fullVersion}
+👤 Profile: ${profileType}
 📅 Test Time: ${new Date().toISOString().replace('T', ' ').substring(0, 16)} UTC
 
 If you see this note, Nostr integration is working correctly! ✅
