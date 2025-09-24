@@ -3,23 +3,17 @@
  * Handles historical data operations, exports, and cleanup
  */
 
-const {
+import {
   getAvailableDates,
   getLatestStats,
   exportToCSV,
   cleanupOldData,
   loadStatsRange,
   RETENTION_DAYS
-} = require('../../lib/dataStore');
-const { securityMiddleware, setSecurityHeaders } = require('../../lib/security');
+} from '../../lib/dataStore.js';
+import { securityMiddleware, setSecurityHeaders } from '../../lib/security.js';
 
-// Optional version info - fallback if file doesn't exist
-let versionInfo;
-try {
-  versionInfo = require('../../lib/version');
-} catch (error) {
-  versionInfo = { fullVersion: '1.0.0' };
-}
+const versionInfo = { fullVersion: '1.0.0' };
 
 export default async function handler(req, res) {
   try {

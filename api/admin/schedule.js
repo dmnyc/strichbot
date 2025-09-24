@@ -3,23 +3,17 @@
  * Handles dynamic cron schedule updates
  */
 
-const {
+import {
   loadScheduleConfig,
   saveScheduleConfig,
   generateCronSchedules,
   checkScheduleConflicts,
   generateVercelCronConfig,
   updateVercelConfig
-} = require('../../lib/scheduler');
-const { securityMiddleware, setSecurityHeaders } = require('../../lib/security');
+} from '../../lib/scheduler.js';
+import { securityMiddleware, setSecurityHeaders } from '../../lib/security.js';
 
-// Optional version info - fallback if file doesn't exist
-let versionInfo;
-try {
-  versionInfo = require('../../lib/version');
-} catch (error) {
-  versionInfo = { fullVersion: '1.0.0' };
-}
+const versionInfo = { fullVersion: '1.0.0' };
 
 export default async function handler(req, res) {
   try {
@@ -35,7 +29,7 @@ export default async function handler(req, res) {
     }
 
     // Validate admin token
-    const adminToken = req.headers['x-api-key'] || process.env.ADMIN_TOKEN;
+    const adminToken = req.headers['x-api-key'];
     if (!adminToken || adminToken !== process.env.ADMIN_TOKEN) {
       return res.status(401).json({
         success: false,
@@ -103,43 +97,32 @@ export default async function handler(req, res) {
           console.warn('Schedule conflicts detected:', conflicts);
         }
 
-        // Save the configuration
         const saved = await saveScheduleConfig(config);
+
         if (!saved) {
-          throw new Error('Failed to save schedule configuration');
+          return res.status(500).json({
+            success: false,
+            error: 'Failed to save schedule configuration to database',
+            timestamp: new Date().toISOString()
+          });
         }
 
-        let vercelUpdated = false;
-        let vercelError = null;
+        console.log('Schedule configuration saved to database successfully');
 
-        // Update Vercel configuration if requested
-        if (updateVercel) {
-          try {
-            const vercelCrons = generateVercelCronConfig(cronSchedules);
-            vercelUpdated = await updateVercelConfig(vercelCrons);
-
-            if (vercelUpdated) {
-              console.log('Vercel configuration updated successfully');
-            } else {
-              vercelError = 'Failed to update vercel.json';
-            }
-          } catch (error) {
-            console.error('Error updating Vercel config:', error);
-            vercelError = error.message;
-          }
-        }
+        const vercelCrons = generateVercelCronConfig(cronSchedules);
 
         return res.status(200).json({
           success: true,
-          message: 'Schedule configuration updated successfully',
+          message: 'Schedule configuration saved successfully',
           data: {
             saved: true,
             conflicts: conflicts.length,
             conflictDetails: conflicts,
             vercel: {
-              updated: vercelUpdated,
-              error: vercelError,
-              requiresDeployment: vercelUpdated
+              updated: false,
+              note: 'Update vercel.json manually and redeploy',
+              requiresDeployment: true,
+              suggestedConfig: vercelCrons
             },
             generated: {
               cronSchedules,

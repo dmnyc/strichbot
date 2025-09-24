@@ -3,22 +3,17 @@
  * Handles test notifications and system health checks
  */
 
-const { sendMessage, validateTelegramConfig } = require('../../lib/telegram');
-const { publishEvent, parseRelays } = require('../../lib/nostr');
-const { fetchCommunityStats } = require('../../lib/amboss');
-const { fetchBlockData } = require('../../lib/mempool');
-const { generateWeeklyReport, formatTrendReportForNostr, formatTrendReportForTelegram } = require('../../lib/trendAnalysis');
-const { securityMiddleware, setSecurityHeaders } = require('../../lib/security');
+import { setSecurityHeaders } from '../../lib/security.js';
 
-// Optional version info - fallback if file doesn't exist
-let versionInfo;
-try {
-  versionInfo = require('../../lib/version');
-} catch (error) {
-  versionInfo = { fullVersion: '1.0.0' };
-}
+const versionInfo = { fullVersion: '1.0.0' };
 
 export default async function handler(req, res) {
+  const { sendMessage, validateTelegramConfig } = await import('../../lib/telegram.js');
+  const { publishEvent, parseRelays } = await import('../../lib/nostr.js');
+  const { fetchCommunityStats } = await import('../../lib/amboss.js');
+  const { fetchBlockData } = await import('../../lib/mempool.js');
+  const { generateWeeklyReport, formatTrendReportForNostr, formatTrendReportForTelegram } = await import('../../lib/trendAnalysis.js');
+
   try {
     // Apply security headers
     setSecurityHeaders(res);
@@ -158,13 +153,19 @@ If you received this message, Telegram integration is working correctly! ✅`;
  */
 async function handleNostrTest(req, res) {
   try {
-    const nsec = process.env.NOSTR_NSEC;
+    const { publishEvent, parseRelays } = await import('../../lib/nostr.js');
+    const { useTestProfile } = req.body;
+    const nsec = useTestProfile && process.env.NOSTR_TEST_NSEC
+      ? process.env.NOSTR_TEST_NSEC
+      : process.env.NOSTR_NSEC;
     const relayString = process.env.NOSTR_RELAYS;
 
     if (!nsec) {
       return res.status(400).json({
         success: false,
-        error: 'NOSTR_NSEC environment variable not configured',
+        error: useTestProfile
+          ? 'NOSTR_TEST_NSEC environment variable not configured'
+          : 'NOSTR_NSEC environment variable not configured',
         timestamp: new Date().toISOString()
       });
     }
@@ -172,18 +173,20 @@ async function handleNostrTest(req, res) {
     if (!nsec.startsWith('nsec1')) {
       return res.status(400).json({
         success: false,
-        error: 'NOSTR_NSEC must be in nsec1 format',
+        error: 'Nostr private key must be in nsec1 format',
         timestamp: new Date().toISOString()
       });
     }
 
     // Prepare test message
+    const profileType = useTestProfile ? 'TEST PROFILE' : 'Production Profile';
     const testMessage = `🧪 StrichBot Admin Test ⚡
 
 This is a test note from the StrichBot admin interface.
 
 ⚡ Bot Status: Online
 🤖 Version: ${versionInfo.fullVersion}
+👤 Profile: ${profileType}
 📅 Test Time: ${new Date().toISOString().replace('T', ' ').substring(0, 16)} UTC
 
 If you see this note, Nostr integration is working correctly! ✅

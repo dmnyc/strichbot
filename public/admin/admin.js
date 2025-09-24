@@ -22,6 +22,10 @@ class AdminDashboard {
             this.authenticate();
         });
 
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            this.logout();
+        });
+
         // Schedule management
         document.getElementById('save-schedule').addEventListener('click', () => {
             this.saveSchedule();
@@ -107,6 +111,17 @@ class AdminDashboard {
     showDashboard() {
         document.getElementById('auth-section').classList.add('hidden');
         document.getElementById('dashboard').classList.remove('hidden');
+        document.getElementById('logout-btn').classList.remove('hidden');
+    }
+
+    logout() {
+        this.token = null;
+        localStorage.removeItem('strichbot-admin-token');
+        document.getElementById('auth-section').classList.remove('hidden');
+        document.getElementById('dashboard').classList.add('hidden');
+        document.getElementById('logout-btn').classList.add('hidden');
+        document.getElementById('admin-token').value = '';
+        this.showMessage('Logged out successfully', 'success');
     }
 
     async loadDashboardData() {
@@ -451,12 +466,16 @@ class AdminDashboard {
 
     async testNostr() {
         try {
-            this.showMessage('Sending test Nostr event...', 'info');
+            const useTestProfile = document.getElementById('use-test-nostr').checked;
+            this.showMessage(`Sending test Nostr event${useTestProfile ? ' (using test profile)' : ''}...`, 'info');
 
-            const response = await this.apiCall('/api/admin/test-notification', 'POST', { type: 'nostr' });
+            const response = await this.apiCall('/api/admin/test-notification', 'POST', {
+                type: 'nostr',
+                useTestProfile
+            });
 
             if (response.success) {
-                this.showMessage('Test Nostr event published successfully!', 'success');
+                this.showMessage(`Test Nostr event published successfully${useTestProfile ? ' to test profile' : ''}!`, 'success');
             } else {
                 throw new Error(response.error || 'Nostr test failed');
             }
