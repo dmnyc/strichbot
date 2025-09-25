@@ -102,7 +102,7 @@ export default async function handler(req, res) {
     if (loadScheduleConfig) {
       try {
         const scheduleConfig = await loadScheduleConfig();
-        if (!scheduleConfig.categories || !scheduleConfig.categories.daily) {
+        if (!scheduleConfig.platforms || !scheduleConfig.platforms.daily || !scheduleConfig.platforms.daily.telegram) {
           console.log('Daily posts are disabled, skipping Telegram post');
           return res.status(200).json({
             success: true,

@@ -90,7 +90,7 @@ module.exports = async function handler(req, res) {
     if (loadScheduleConfig) {
       try {
         const scheduleConfig = await loadScheduleConfig();
-        if (!scheduleConfig.categories || !scheduleConfig.categories.daily) {
+        if (!scheduleConfig.platforms || !scheduleConfig.platforms.daily || !scheduleConfig.platforms.daily.nostr) {
           console.log('StrichBot: Daily posts are disabled, skipping');
           return res.status(200).json({
             success: true,
