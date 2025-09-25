@@ -8,7 +8,9 @@ import { setSecurityHeaders } from '../../lib/security.js';
 const versionInfo = { fullVersion: '1.0.0' };
 
 export default async function handler(req, res) {
-  const { sendMessage, validateTelegramConfig } = await import('../../lib/telegram.js');
+  const { createRequire } = await import('module');
+  const require = createRequire(import.meta.url);
+  const { sendMessage, validateTelegramConfig } = require('../../lib/telegram.js');
   const { publishEvent, parseRelays } = await import('../../lib/nostr.js');
   const { fetchCommunityStats } = await import('../../lib/amboss.js');
   const { fetchBlockData } = await import('../../lib/mempool.js');
