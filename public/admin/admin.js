@@ -162,10 +162,9 @@ class AdminDashboard {
         // Populate API key configuration
         if (config && config.environment) {
             if (config.environment.apiKeyExpiry) {
+                // For datetime-local input, we want to display the date/time as-is without timezone conversion
                 const expiryDate = new Date(config.environment.apiKeyExpiry);
-                const localDateTime = new Date(expiryDate.getTime() - expiryDate.getTimezoneOffset() * 60000)
-                    .toISOString()
-                    .slice(0, 16);
+                const localDateTime = expiryDate.toISOString().slice(0, 16);
                 document.getElementById('api-expiry-date').value = localDateTime;
             }
             if (config.environment.warningDays) {
@@ -173,24 +172,12 @@ class AdminDashboard {
             }
         }
 
-        // Populate platform settings from simplified config
-        if (config && config.platforms) {
-            if (config.platforms.daily) {
-                document.getElementById('daily-nostr').checked = config.platforms.daily.nostr || false;
-                document.getElementById('daily-telegram').checked = config.platforms.daily.telegram || false;
-            }
-            if (config.platforms.weekly) {
-                document.getElementById('weekly-nostr').checked = config.platforms.weekly.nostr || false;
-                document.getElementById('weekly-telegram').checked = config.platforms.weekly.telegram || false;
-            }
-            if (config.platforms.monthly) {
-                document.getElementById('monthly-nostr').checked = config.platforms.monthly.nostr || false;
-                document.getElementById('monthly-telegram').checked = config.platforms.monthly.telegram || false;
-            }
-            if (config.platforms.annual) {
-                document.getElementById('annual-nostr').checked = config.platforms.annual.nostr || false;
-                document.getElementById('annual-telegram').checked = config.platforms.annual.telegram || false;
-            }
+        // Populate category settings from simplified config
+        if (config && config.categories) {
+            document.getElementById('daily-enabled').checked = config.categories.daily || false;
+            document.getElementById('weekly-enabled').checked = config.categories.weekly || false;
+            document.getElementById('monthly-enabled').checked = config.categories.monthly || false;
+            document.getElementById('annual-enabled').checked = config.categories.annual || false;
         }
     }
 
@@ -219,23 +206,11 @@ class AdminDashboard {
 
     getScheduleConfig() {
         return {
-            platforms: {
-                daily: {
-                    nostr: document.getElementById('daily-nostr').checked,
-                    telegram: document.getElementById('daily-telegram').checked
-                },
-                weekly: {
-                    nostr: document.getElementById('weekly-nostr').checked,
-                    telegram: document.getElementById('weekly-telegram').checked
-                },
-                monthly: {
-                    nostr: document.getElementById('monthly-nostr').checked,
-                    telegram: document.getElementById('monthly-telegram').checked
-                },
-                annual: {
-                    nostr: document.getElementById('annual-nostr').checked,
-                    telegram: document.getElementById('annual-telegram').checked
-                }
+            categories: {
+                daily: document.getElementById('daily-enabled').checked,
+                weekly: document.getElementById('weekly-enabled').checked,
+                monthly: document.getElementById('monthly-enabled').checked,
+                annual: document.getElementById('annual-enabled').checked
             }
         };
     }
@@ -243,7 +218,8 @@ class AdminDashboard {
     async saveApiConfig() {
         try {
             const config = {
-                expiryDate: document.getElementById('api-expiry-date').value,
+                expiryDate: document.getElementById('api-expiry-date').value ?
+                    new Date(document.getElementById('api-expiry-date').value).toISOString() : null,
                 warningDays: document.getElementById('warning-days').value
             };
 
