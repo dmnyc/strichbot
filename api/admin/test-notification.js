@@ -3,16 +3,16 @@
  * Handles test notifications and system health checks
  */
 
-import { setSecurityHeaders } from '../../lib/security.js';
+const { setSecurityHeaders } = require('../../lib/security');
+const { sendMessage, validateTelegramConfig } = require('../../lib/telegram');
+const { publishEvent, parseRelays } = require('../../lib/nostr');
+const { fetchCommunityStats } = require('../../lib/amboss');
+const { fetchBlockData } = require('../../lib/mempool');
+const { generateWeeklyReport, formatTrendReportForNostr, formatTrendReportForTelegram } = require('../../lib/trendAnalysis');
 
 const versionInfo = { fullVersion: '1.0.0' };
 
-export default async function handler(req, res) {
-  const { sendMessage, validateTelegramConfig } = await import('../../lib/telegram.js');
-  const { publishEvent, parseRelays } = await import('../../lib/nostr.js');
-  const { fetchCommunityStats } = await import('../../lib/amboss.js');
-  const { fetchBlockData } = await import('../../lib/mempool.js');
-  const { generateWeeklyReport, formatTrendReportForNostr, formatTrendReportForTelegram } = await import('../../lib/trendAnalysis.js');
+module.exports = async function handler(req, res) {
 
   try {
     // Apply security headers
