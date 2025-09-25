@@ -9,12 +9,6 @@ const { securityMiddleware, setSecurityHeaders } = require('../lib/security');
 const { fetchBlockData } = require('../lib/mempool');
 const { storeStats, cleanupOldData } = require('../lib/dataStore');
 
-// Dynamic import for ES module
-let loadScheduleConfig;
-(async () => {
-  const { loadScheduleConfig: importedLoadScheduleConfig } = await import('../lib/scheduler.js');
-  loadScheduleConfig = importedLoadScheduleConfig;
-})();
 
 // Optional version info - fallback if file doesn't exist
 let versionInfo;
@@ -86,22 +80,6 @@ module.exports = async function handler(req, res) {
 
     console.log('StrichBot: Environment variables validated');
 
-    // Check if daily posts are enabled
-    if (loadScheduleConfig) {
-      try {
-        const scheduleConfig = await loadScheduleConfig();
-        if (!scheduleConfig.platforms || !scheduleConfig.platforms.daily || !scheduleConfig.platforms.daily.nostr) {
-          console.log('StrichBot: Daily posts are disabled, skipping');
-          return res.status(200).json({
-            success: true,
-            message: 'Daily posts are disabled'
-          });
-        }
-      } catch (error) {
-        console.error('Error checking schedule config:', error);
-        // Continue with posting if config check fails (fail open)
-      }
-    }
 
     // Fetch statistics from Amboss
     console.log('StrichBot: Fetching statistics from Amboss...');
