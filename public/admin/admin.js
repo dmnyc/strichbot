@@ -31,9 +31,6 @@ class AdminDashboard {
             this.saveSchedule();
         });
 
-        document.getElementById('preview-schedule').addEventListener('click', () => {
-            this.previewSchedule();
-        });
 
         // API key management
         document.getElementById('save-api-config').addEventListener('click', () => {
@@ -162,75 +159,22 @@ class AdminDashboard {
     }
 
     populateConfig(config) {
-        if (!config || !config.schedules) return;
-
-        const schedules = config.schedules;
-
         // Populate API key configuration
-        if (config.environment) {
+        if (config && config.environment) {
             if (config.environment.apiKeyExpiry) {
+                // For datetime-local input, we want to display the date/time as-is without timezone conversion
                 const expiryDate = new Date(config.environment.apiKeyExpiry);
-                const localDateTime = new Date(expiryDate.getTime() - expiryDate.getTimezoneOffset() * 60000)
-                    .toISOString()
-                    .slice(0, 16);
+                const localDateTime = expiryDate.toISOString().slice(0, 16);
                 document.getElementById('api-expiry-date').value = localDateTime;
             }
-            if (config.environment.warningDays) {
-                document.getElementById('warning-days').value = config.environment.warningDays;
-            }
         }
 
-        // Daily configuration
-        if (schedules.daily) {
-            document.getElementById('daily-enabled').checked = schedules.daily.enabled;
-            document.getElementById('daily-time').value = schedules.daily.time || '17:00';
-
-            // Set day checkboxes
-            const days = schedules.daily.days || [];
-            document.querySelectorAll('.days-selector input[type="checkbox"]').forEach(cb => {
-                cb.checked = days.includes(cb.value);
-            });
-
-            // Platform settings
-            if (schedules.daily.platforms) {
-                document.getElementById('daily-nostr').checked = schedules.daily.platforms.nostr?.enabled || false;
-                document.getElementById('daily-telegram').checked = schedules.daily.platforms.telegram?.enabled || false;
-            }
-        }
-
-        // Weekly configuration
-        if (schedules.weekly) {
-            document.getElementById('weekly-enabled').checked = schedules.weekly.enabled;
-            document.getElementById('weekly-day').value = schedules.weekly.dayOfWeek || 'sunday';
-            document.getElementById('weekly-time').value = schedules.weekly.time || '18:00';
-
-            if (schedules.weekly.platforms) {
-                document.getElementById('weekly-nostr').checked = schedules.weekly.platforms.nostr?.enabled || false;
-                document.getElementById('weekly-telegram').checked = schedules.weekly.platforms.telegram?.enabled || false;
-            }
-        }
-
-        // Monthly configuration
-        if (schedules.monthly) {
-            document.getElementById('monthly-enabled').checked = schedules.monthly.enabled;
-            document.getElementById('monthly-day').value = schedules.monthly.dayOfMonth || '1';
-            document.getElementById('monthly-time').value = schedules.monthly.time || '19:00';
-
-            if (schedules.monthly.platforms) {
-                document.getElementById('monthly-nostr').checked = schedules.monthly.platforms.nostr?.enabled || false;
-                document.getElementById('monthly-telegram').checked = schedules.monthly.platforms.telegram?.enabled || false;
-            }
-        }
-
-        // Annual configuration
-        if (schedules.annual) {
-            document.getElementById('annual-enabled').checked = schedules.annual.enabled;
-            document.getElementById('annual-time').value = schedules.annual.time || '20:00';
-
-            if (schedules.annual.platforms) {
-                document.getElementById('annual-nostr').checked = schedules.annual.platforms.nostr?.enabled || false;
-                document.getElementById('annual-telegram').checked = schedules.annual.platforms.telegram?.enabled || false;
-            }
+        // Populate category settings from simplified config
+        if (config && config.categories) {
+            document.getElementById('daily-enabled').checked = config.categories.daily || false;
+            document.getElementById('weekly-enabled').checked = config.categories.weekly || false;
+            document.getElementById('monthly-enabled').checked = config.categories.monthly || false;
+            document.getElementById('annual-enabled').checked = config.categories.annual || false;
         }
     }
 
@@ -257,104 +201,23 @@ class AdminDashboard {
         }
     }
 
-    previewSchedule() {
-        const config = this.getScheduleConfig();
-        const preview = this.generateSchedulePreview(config);
-
-        // Show preview in a popup or modal
-        const previewText = JSON.stringify(preview, null, 2);
-        alert(`Schedule Preview:\n\n${previewText}`);
-    }
-
     getScheduleConfig() {
-        // Get selected days
-        const selectedDays = Array.from(document.querySelectorAll('.days-selector input[type="checkbox"]:checked'))
-            .map(cb => cb.value);
-
         return {
-            schedules: {
-                daily: {
-                    enabled: document.getElementById('daily-enabled').checked,
-                    time: document.getElementById('daily-time').value,
-                    days: selectedDays,
-                    platforms: {
-                        nostr: {
-                            enabled: document.getElementById('daily-nostr').checked
-                        },
-                        telegram: {
-                            enabled: document.getElementById('daily-telegram').checked
-                        }
-                    }
-                },
-                weekly: {
-                    enabled: document.getElementById('weekly-enabled').checked,
-                    dayOfWeek: document.getElementById('weekly-day').value,
-                    time: document.getElementById('weekly-time').value,
-                    platforms: {
-                        nostr: {
-                            enabled: document.getElementById('weekly-nostr').checked
-                        },
-                        telegram: {
-                            enabled: document.getElementById('weekly-telegram').checked
-                        }
-                    }
-                },
-                monthly: {
-                    enabled: document.getElementById('monthly-enabled').checked,
-                    dayOfMonth: document.getElementById('monthly-day').value,
-                    time: document.getElementById('monthly-time').value,
-                    platforms: {
-                        nostr: {
-                            enabled: document.getElementById('monthly-nostr').checked
-                        },
-                        telegram: {
-                            enabled: document.getElementById('monthly-telegram').checked
-                        }
-                    }
-                },
-                annual: {
-                    enabled: document.getElementById('annual-enabled').checked,
-                    date: document.getElementById('annual-date').value,
-                    time: document.getElementById('annual-time').value,
-                    platforms: {
-                        nostr: {
-                            enabled: document.getElementById('annual-nostr').checked
-                        },
-                        telegram: {
-                            enabled: document.getElementById('annual-telegram').checked
-                        }
-                    }
-                }
+            categories: {
+                daily: document.getElementById('daily-enabled').checked,
+                weekly: document.getElementById('weekly-enabled').checked,
+                monthly: document.getElementById('monthly-enabled').checked,
+                annual: document.getElementById('annual-enabled').checked
             }
         };
-    }
-
-    generateSchedulePreview(config) {
-        const preview = {};
-
-        Object.entries(config.schedules).forEach(([type, schedule]) => {
-            if (schedule.enabled) {
-                preview[type] = {
-                    time: schedule.time,
-                    ...(schedule.days && { days: schedule.days }),
-                    ...(schedule.dayOfWeek && { dayOfWeek: schedule.dayOfWeek }),
-                    ...(schedule.dayOfMonth && { dayOfMonth: schedule.dayOfMonth }),
-                    ...(schedule.date && { date: schedule.date }),
-                    platforms: Object.entries(schedule.platforms)
-                        .filter(([_, platform]) => platform.enabled)
-                        .map(([name, platform]) => `${name} at ${platform.time}`)
-                };
-            }
-        });
-
-        return preview;
     }
 
     async saveApiConfig() {
         try {
             const config = {
-                expiryDate: document.getElementById('api-expiry-date').value,
-                warningDays: document.getElementById('warning-days').value
+                expiryDate: document.getElementById('api-expiry-date').value ?
+                    new Date(document.getElementById('api-expiry-date').value).toISOString() : null,
+                warningDays: '7,3,1'  // Fixed default warning days
             };
 
             const response = await this.apiCall('/api/admin/config', 'POST', { apiKey: config });

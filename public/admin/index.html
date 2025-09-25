@@ -70,33 +70,13 @@
                     <div class="schedule-section">
                         <h3>📅 Daily Posts</h3>
                         <div class="schedule-grid">
-                            <div class="form-group">
-                                <label>
-                                    <input type="checkbox" id="daily-enabled"> Enable Daily Posts
-                                </label>
-                            </div>
-                            <div class="time-config">
-                                <div class="form-group">
-                                    <label for="daily-time">Time (UTC):</label>
-                                    <input type="time" id="daily-time" value="00:00">
-                                </div>
-                                <div class="form-group">
-                                    <label>Days of Week:</label>
-                                    <div class="days-selector">
-                                        <label><input type="checkbox" value="mon" checked> Mon</label>
-                                        <label><input type="checkbox" value="tue" checked> Tue</label>
-                                        <label><input type="checkbox" value="wed" checked> Wed</label>
-                                        <label><input type="checkbox" value="thu" checked> Thu</label>
-                                        <label><input type="checkbox" value="fri" checked> Fri</label>
-                                        <label><input type="checkbox" value="sat" checked> Sat</label>
-                                        <label><input type="checkbox" value="sun" checked> Sun</label>
-                                    </div>
-                                </div>
+                            <div class="schedule-info">
+                                <p><strong>Schedule:</strong> 16:00 UTC (4:00 PM) Daily</p>
+                                <p class="note">To change posting time, update vercel.json and redeploy</p>
                             </div>
                             <div class="platform-config">
-                                <h4>Platforms:</h4>
-                                <label><input type="checkbox" id="daily-nostr" checked> Nostr</label>
-                                <label><input type="checkbox" id="daily-telegram" checked> Telegram</label>
+                                <h4>Status:</h4>
+                                <label><input type="checkbox" id="daily-enabled" checked> Enable Daily Posts</label>
                             </div>
                         </div>
                     </div>
@@ -105,33 +85,13 @@
                     <div class="schedule-section">
                         <h3>📈 Weekly Reports</h3>
                         <div class="schedule-grid">
-                            <div class="form-group">
-                                <label>
-                                    <input type="checkbox" id="weekly-enabled"> Enable Weekly Reports
-                                </label>
-                            </div>
-                            <div class="time-config">
-                                <div class="form-group">
-                                    <label for="weekly-day">Day of Week:</label>
-                                    <select id="weekly-day">
-                                        <option value="sunday">Sunday</option>
-                                        <option value="monday">Monday</option>
-                                        <option value="tuesday">Tuesday</option>
-                                        <option value="wednesday">Wednesday</option>
-                                        <option value="thursday">Thursday</option>
-                                        <option value="friday">Friday</option>
-                                        <option value="saturday">Saturday</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="weekly-time">Time (UTC):</label>
-                                    <input type="time" id="weekly-time" value="18:00">
-                                </div>
+                            <div class="schedule-info">
+                                <p><strong>Status:</strong> Not configured</p>
+                                <p class="note">Configure in vercel.json and enable platforms below when ready</p>
                             </div>
                             <div class="platform-config">
-                                <h4>Platforms:</h4>
-                                <label><input type="checkbox" id="weekly-nostr" checked> Nostr</label>
-                                <label><input type="checkbox" id="weekly-telegram" checked> Telegram</label>
+                                <h4>Status:</h4>
+                                <label><input type="checkbox" id="weekly-enabled"> Enable Weekly Reports</label>
                             </div>
                         </div>
                     </div>
@@ -140,29 +100,13 @@
                     <div class="schedule-section">
                         <h3>📊 Monthly Reports</h3>
                         <div class="schedule-grid">
-                            <div class="form-group">
-                                <label>
-                                    <input type="checkbox" id="monthly-enabled"> Enable Monthly Reports
-                                </label>
-                            </div>
-                            <div class="time-config">
-                                <div class="form-group">
-                                    <label for="monthly-day">Day of Month:</label>
-                                    <select id="monthly-day">
-                                        <option value="1">1st</option>
-                                        <option value="15">15th</option>
-                                        <option value="last">Last Day</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="monthly-time">Time (UTC):</label>
-                                    <input type="time" id="monthly-time" value="19:00">
-                                </div>
+                            <div class="schedule-info">
+                                <p><strong>Status:</strong> Not configured</p>
+                                <p class="note">Configure in vercel.json and enable platforms below when ready</p>
                             </div>
                             <div class="platform-config">
-                                <h4>Platforms:</h4>
-                                <label><input type="checkbox" id="monthly-nostr" checked> Nostr</label>
-                                <label><input type="checkbox" id="monthly-telegram" checked> Telegram</label>
+                                <h4>Status:</h4>
+                                <label><input type="checkbox" id="monthly-enabled"> Enable Monthly Reports</label>
                             </div>
                         </div>
                     </div>
@@ -171,32 +115,19 @@
                     <div class="schedule-section">
                         <h3>🎊 Annual Reports</h3>
                         <div class="schedule-grid">
-                            <div class="form-group">
-                                <label>
-                                    <input type="checkbox" id="annual-enabled"> Enable Annual Reports
-                                </label>
-                            </div>
-                            <div class="time-config">
-                                <div class="form-group">
-                                    <label for="annual-date">Date:</label>
-                                    <input type="date" id="annual-date" value="2025-12-31">
-                                </div>
-                                <div class="form-group">
-                                    <label for="annual-time">Time (UTC):</label>
-                                    <input type="time" id="annual-time" value="20:00">
-                                </div>
+                            <div class="schedule-info">
+                                <p><strong>Status:</strong> Not configured</p>
+                                <p class="note">Configure in vercel.json and enable platforms below when ready</p>
                             </div>
                             <div class="platform-config">
-                                <h4>Platforms:</h4>
-                                <label><input type="checkbox" id="annual-nostr" checked> Nostr</label>
-                                <label><input type="checkbox" id="annual-telegram" checked> Telegram</label>
+                                <h4>Status:</h4>
+                                <label><input type="checkbox" id="annual-enabled"> Enable Annual Reports</label>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-actions">
-                        <button id="save-schedule" class="btn btn-primary">💾 Save Schedule</button>
-                        <button id="preview-schedule" class="btn btn-secondary">👁️ Preview Changes</button>
+                        <button id="save-schedule" class="btn btn-primary">💾 Save Platform Settings</button>
                     </div>
                 </div>
             </section>
@@ -207,13 +138,8 @@
                     <h2>🔑 API Key Management</h2>
                     <div class="key-info">
                         <div class="form-group">
-                            <label for="api-expiry-date">Expiration Date:</label>
+                            <label for="api-expiry-date">Expiration Date (UTC):</label>
                             <input type="datetime-local" id="api-expiry-date">
-                        </div>
-                        <div class="form-group">
-                            <label for="warning-days">Warning Days:</label>
-                            <input type="text" id="warning-days" placeholder="7,3,1" value="7,3,1">
-                            <small>Comma-separated list of days before expiration to send warnings</small>
                         </div>
                         <div class="form-actions">
                             <button id="save-api-config" class="btn btn-primary">💾 Save Configuration</button>
