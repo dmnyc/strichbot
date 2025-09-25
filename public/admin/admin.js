@@ -167,9 +167,6 @@ class AdminDashboard {
                 const localDateTime = expiryDate.toISOString().slice(0, 16);
                 document.getElementById('api-expiry-date').value = localDateTime;
             }
-            if (config.environment.warningDays) {
-                document.getElementById('warning-days').value = config.environment.warningDays;
-            }
         }
 
         // Populate category settings from simplified config
@@ -220,7 +217,7 @@ class AdminDashboard {
             const config = {
                 expiryDate: document.getElementById('api-expiry-date').value ?
                     new Date(document.getElementById('api-expiry-date').value).toISOString() : null,
-                warningDays: document.getElementById('warning-days').value
+                warningDays: '7,3,1'  // Fixed default warning days
             };
 
             const response = await this.apiCall('/api/admin/config', 'POST', { apiKey: config });
