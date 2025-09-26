@@ -3,19 +3,19 @@
  * Handles historical data operations, exports, and cleanup
  */
 
-import {
+const {
   getAvailableDates,
   getLatestStats,
   exportToCSV,
   cleanupOldData,
   loadStatsRange,
   RETENTION_DAYS
-} from '../../lib/dataStore.js';
-import { securityMiddleware, setSecurityHeaders } from '../../lib/security.js';
+} = require('../../lib/dataStore');
+const { securityMiddleware, setSecurityHeaders } = require('../../lib/security');
 
 const versionInfo = { fullVersion: '1.0.0' };
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   try {
     // Apply security headers
     setSecurityHeaders(res);
