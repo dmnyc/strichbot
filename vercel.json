@@ -9,15 +9,6 @@
     "api/check-api-key.js": {
       "maxDuration": 30
     },
-    "api/weekly-report.js": {
-      "maxDuration": 60
-    },
-    "api/monthly-report.js": {
-      "maxDuration": 60
-    },
-    "api/annual-report.js": {
-      "maxDuration": 60
-    },
     "api/admin/config.js": {
       "maxDuration": 30
     },
