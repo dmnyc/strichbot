@@ -3,7 +3,7 @@
  * Returns current version information including build details
  */
 
-import { securityMiddleware, setSecurityHeaders } from '../lib/security.js';
+const { securityMiddleware, setSecurityHeaders } = require('../lib/security');
 
 const versionInfo = {
   version: '1.0.0',
@@ -13,7 +13,7 @@ const versionInfo = {
   buildTime: new Date().toISOString()
 };
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   try {
     // Apply security headers
     setSecurityHeaders(res);
