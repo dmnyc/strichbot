@@ -45,6 +45,7 @@ module.exports = async function handler(req, res) {
         memberCount: stats.memberCount,
         totalChannels: stats.totalChannels,
         totalCapacity: stats.totalCapacity,
+        pendingRequests: stats.pendingRequests || 0,
         timestamp: stats.timestamp,
         source: stats.source
       }
