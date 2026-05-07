@@ -30,6 +30,10 @@
   },
   "crons": [
     {
+      "path": "/api/weekly-nostr-post",
+      "schedule": "0 20 * * 0"
+    },
+    {
       "path": "/api/weekly-telegram-post",
       "schedule": "5 20 * * 0"
     }
